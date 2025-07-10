@@ -1,13 +1,35 @@
 
+interface NocodbResponse<T = any> {
+    list: T[];
+    pageInfo?: {
+        totalRows?: number;
+        page?: number;
+        pageSize?: number;
+        isFirstPage?: boolean;
+        isLastPage?: boolean;
+    };
+}
+
+interface RequestOptions {
+    method: string;
+    headers: {
+        'Content-Type': string;
+        'xc-token': string;
+    };
+    body?: string;
+}
+
 class NocodbController {
+    private apiUrl: string;
+    private token: string;
     
-    constructor(taula, token) {
+    constructor(taula: string, token: string) {
         this.apiUrl = `https://app.nocodb.com/api/v2/tables/${taula}/records`;
         this.token = token;
     }
 
-    getAllItems2() {
-        const options = {
+    getAllItems2(): Promise<any[]> {
+        const options: RequestOptions = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -17,11 +39,11 @@ class NocodbController {
 
         return fetch(`${this.apiUrl}`, options)
         .then(x => x.json())
-        .then(data => data.list)
+        .then((data: NocodbResponse) => data.list)
     
     }
 
-    async getAllItems() {
+    async getAllItems(): Promise<any[]> {
         const response = await fetch(`${this.apiUrl}`, {
             method: 'GET',
             headers: {
@@ -29,11 +51,11 @@ class NocodbController {
                 'xc-token': this.token
             }
         });
-        const data = await response.json();
+        const data: NocodbResponse = await response.json();
         return data.list;
     }
 
-    async getItemById(id) {
+    async getItemById(id: string | number): Promise<any> {
         const response = await fetch(`${this.apiUrl}/${id}`, {
             method: 'GET',
             headers: {
@@ -46,7 +68,7 @@ class NocodbController {
         return data;
     }
 
-    async createItem(nuevoItem) {
+    async createItem(nuevoItem: Record<string, any>): Promise<any> {
         const response = await fetch(`${this.apiUrl}`, {
             method: 'POST',
             headers: {
@@ -60,8 +82,8 @@ class NocodbController {
         return data;
     }
 
-    async updateItem(nuevosDatos, id) {
-        nuevosDatos.Id=id
+    async updateItem(nuevosDatos: Record<string, any>, id: string | number): Promise<any> {
+        nuevosDatos.Id = id;
         const response = await fetch(`${this.apiUrl}`, {
             method: 'PATCH',
             headers: {
@@ -75,7 +97,7 @@ class NocodbController {
         return data;
     }
 
-    async deleteItem(id) {
+    async deleteItem(id: string | number): Promise<any> {
         const response = await fetch(`${this.apiUrl}`, {
             method: 'DELETE',
             headers: {
@@ -83,7 +105,7 @@ class NocodbController {
                 'xc-token': this.token
             },
             body: JSON.stringify({
-                Id:id
+                Id: id
             })
         });
 

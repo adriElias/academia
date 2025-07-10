@@ -1,16 +1,17 @@
-import Cursos from "./Cursos.jsx";
+import Cursos from "./Cursos";
 import Alumnos from "./Alumnos";
 import Base from "./Base";
 
-import UserContext from "./contextos/UserContext.js";
+import UserContext from "./contextos/UserContext";
 import { Routes, Route, Link } from 'react-router-dom';
-import NuevoAlumno from "./NuevoAlumno.jsx";
-import  {NuevoCurso}  from "./NuevoCurso.jsx";
+import NuevoAlumno from "./NuevoAlumno";
+import { NuevoCurso } from "./NuevoCurso";
+import { ReactElement } from "react";
+import { UserData } from "./types";
 
+function App(): ReactElement {
 
-function App() {
-
-    const userdata = {
+    const userdata: UserData = {
         nombre: "fulljs2025",
         token: "-9QSS_DyYDXhKjLal0WfRSmVap5G14YcC5Y9iwpN"
     }

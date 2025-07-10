@@ -1,24 +1,35 @@
 import { useContext, useEffect, useState } from "react";
-import UserContext from "./contextos/UserContext.js";
+import UserContext from "./contextos/UserContext";
 import { Link } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { AlumnoController } from "./controllers/AlumnoController.js";
+import { AlumnoController } from "./controllers/AlumnoController";
+import { ReactElement } from "react";
 
-function Alumnos() {
+interface Alumno {
+    Id: number;
+    nombre: string;
+    email: string;
+    telefono: string;
+    idCurso: number;
+    curso: string;
+}
 
-    const { nombre, token } = useContext(UserContext);
+function Alumnos(): ReactElement {
+
+    const userData = useContext(UserContext);
+    const { nombre, token } = userData || { nombre: "", token: "" };
 
     // const table = "met3zt25o9idyyf";
     const alumnesController = new AlumnoController(token);
-    const [alumnos, setAlumnos] = useState([])
+    const [alumnos, setAlumnos] = useState<Alumno[]>([])
 
     const goTo = useNavigate()
 
-    const cargarDatos = () => {
+    const cargarDatos = (): void => {
         alumnesController.getAllItems()
-        .then(datos => setAlumnos(datos))
-        .catch(error => console.log(error))
+        .then((datos: Alumno[]) => setAlumnos(datos))
+        .catch((error: Error) => console.log(error))
     }
    
 
@@ -46,7 +57,7 @@ function Alumnos() {
 
     }, [])
 
-    const eliminar = (idAlumno) => {
+    const eliminar = (idAlumno: number): void => {
         console.log("------llamando a la API--------")
         alumnesController.deleteItem(idAlumno)
         .then(x => cargarDatos())
@@ -86,7 +97,7 @@ function Alumnos() {
         
     }
 
-    const tabla = alumnos.map(alumno =>
+    const tabla = alumnos.map((alumno: Alumno) =>
         <tr key={alumno.Id}>
             <td>{alumno.Id}</td>
             <td>{alumno.nombre}</td>

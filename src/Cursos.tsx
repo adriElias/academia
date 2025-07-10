@@ -1,20 +1,27 @@
 import { useContext, useEffect, useState } from "react";
-import UserContext from "./contextos/UserContext.js";
+import UserContext from "./contextos/UserContext";
 import { Link } from "react-router-dom";
-import { CursoController } from "./controllers/CursoController.js";
+import { CursoController } from "./controllers/CursoController";
+import { ReactElement } from "react";
 
-function Cursos() {
+interface Curso {
+    Id: number;
+    Title: string;
+}
 
-    const { nombre, token } = useContext(UserContext);
+function Cursos(): ReactElement {
+
+    const userData = useContext(UserContext);
+    const { nombre, token } = userData || { nombre: "", token: "" };
 
     // const urlApi = "https://app.nocodb.com/api/v2/tables/m1qgokqms7cfewy/records"
     const cursoController = new CursoController(token);
-    const [cursos, setCursos] = useState([])
+    const [cursos, setCursos] = useState<Curso[]>([])
 
-    const cargarDatos = () => {
+    const cargarDatos = (): void => {
         cursoController.getAllItems()
-            .then(datos => setCursos(datos))
-            .catch(e => console.log(e))
+            .then((datos: Curso[]) => setCursos(datos))
+            .catch((e: Error) => console.log(e))
     }
 
     useEffect(() => {
@@ -40,7 +47,7 @@ function Cursos() {
             <h3>CURSOS </h3>
             <hr />
             <ul>
-                {cursos.map(curso => <li>{curso.Title}</li>)}
+                {cursos.map((curso: Curso) => <li key={curso.Id}>{curso.Title}</li>)}
             </ul>
             <hr />
             <Link to={`/nuevo-curso`}> Nuevo curso</Link>{' '}

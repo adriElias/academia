@@ -1,52 +1,66 @@
 import { useContext, useEffect, useState } from "react";
-import UserContext from "./contextos/UserContext.js";
+import UserContext from "./contextos/UserContext";
 import { useNavigate } from "react-router-dom";
-import NocodbController from "./controllers/NocodbController.js";
-import { AlumnoController } from "./controllers/AlumnoController.js";
-import { CursoController } from "./controllers/CursoController.js";
+import NocodbController from "./controllers/NocodbController";
+import { AlumnoController } from "./controllers/AlumnoController";
+import { CursoController } from "./controllers/CursoController";
 import Form from 'react-bootstrap/Form';
+import { ReactElement } from "react";
 
+interface Curso {
+    Id: number;
+    Title: string;
+}
 
-function NuevoAlumno() {
+interface NuevoAlumnoData {
+    nombre: string;
+    email: string;
+    telefono: string;
+    idCurso: string;
+    curso: string;
+}
 
-    const { token } = useContext(UserContext);
+function NuevoAlumno(): ReactElement {
+
+    const userData = useContext(UserContext);
+    const { token } = userData || { token: "" };
     const nuevoAlumnoController = new AlumnoController(token);
     const cursoController = new CursoController(token);
 
     const goTo = useNavigate()
 
-    const [nombre, setNombre] = useState("")
-    const [email, setEmail] = useState("")
-    const [telefono, setTelefono] = useState("")
-    const [idCurso, setIdCurso] = useState("")
-    const [cursos, setCursos] = useState([])
+    const [nombre, setNombre] = useState<string>("")
+    const [email, setEmail] = useState<string>("")
+    const [telefono, setTelefono] = useState<string>("")
+    const [idCurso, setIdCurso] = useState<string>("")
+    const [cursos, setCursos] = useState<Curso[]>([])
 
-    const cargarDatos = () => {
+    const cargarDatos = (): void => {
         cursoController.getAllItems()
-            .then(datos => setCursos(datos))
-            .catch(e => console.log(e))
+            .then((datos: Curso[]) => setCursos(datos))
+            .catch((e: Error) => console.log(e))
     }
     useEffect(() => {
         cargarDatos();
     }, [])
 
-    function enviarAlumno(e) {
+    function enviarAlumno(e: React.FormEvent<HTMLFormElement>): void {
         e.preventDefault();
-        const cursoSeleccionado = cursos.find(c => c.Id === idCurso || c.Id === Number(idCurso));
+        const cursoSeleccionado = cursos.find(c => c.Id === Number(idCurso) || c.Id === Number(idCurso));
         const nombreCurso = cursoSeleccionado ? cursoSeleccionado.Title : "";  
-        const nuevoAlumno = {
+        const nuevoAlumno: NuevoAlumnoData = {
             nombre: nombre,
             email,
             telefono,
             idCurso,
-            curso:nombreCurso
+            curso: nombreCurso
         }
         nuevoAlumnoController.createItem(nuevoAlumno)
             .then(datos => {
                 console.log(datos);
                 goTo('/alumnos');
             })
-            .catch(e => console.log(e))
+            .catch((e: Error) => console.log(e))
 
     }
 
@@ -71,7 +85,7 @@ function NuevoAlumno() {
                     onChange={(e) => setIdCurso(e.target.value)}
                 >
                     <option value="">Selecciona un curso</option>
-                    {cursos.map(curso => (
+                    {cursos.map((curso: Curso) => (
                         <option key={curso.Id} value={curso.Id}>
                             {curso.Title}{curso.Id}
                         </option>

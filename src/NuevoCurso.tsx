@@ -1,11 +1,20 @@
-import UserContext from "./contextos/UserContext.js";
+import UserContext from "./contextos/UserContext";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CursoController } from "./controllers/CursoController.js";
+import { CursoController } from "./controllers/CursoController";
+import { ReactElement } from "react";
 
-export const NuevoCurso = () => {
+interface NuevoCursoData {
+    title: string;
+    turno: string;
+    duracion: string;
+    inicio: string;
+}
 
-    const { token } = useContext(UserContext);
+export const NuevoCurso = (): ReactElement => {
+
+    const userData = useContext(UserContext);
+    const { token } = userData || { token: "" };
 
     const urlApi = "https://app.nocodb.com/api/v2/tables/m1qgokqms7cfewy/records"
 
@@ -13,14 +22,14 @@ export const NuevoCurso = () => {
 
     const goTo = useNavigate()
 
-    const [title, setTitle] = useState("")
-    const [turno, setTurno] = useState("")
-    const [duracion, setDuracion] = useState("")
-    const [inicio, setInicio] = useState("")
+    const [title, setTitle] = useState<string>("")
+    const [turno, setTurno] = useState<string>("")
+    const [duracion, setDuracion] = useState<string>("")
+    const [inicio, setInicio] = useState<string>("")
 
-    function enviarCurso(e) {
+    function enviarCurso(e: React.FormEvent<HTMLFormElement>): void {
         e.preventDefault();
-        const nuevoCurso = {
+        const nuevoCurso: NuevoCursoData = {
             title: title,
             turno: turno,
             duracion: duracion,
@@ -32,7 +41,7 @@ export const NuevoCurso = () => {
                 console.log(datos);
                 goTo('/cursos');
             })
-            .catch(e => console.log(e))
+            .catch((e: Error) => console.log(e))
 
         // const opciones = {
         //     method: "POST",

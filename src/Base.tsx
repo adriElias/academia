@@ -1,5 +1,7 @@
 
-function Base() {
+import { ReactElement } from "react";
+
+function Base(): ReactElement {
 
     return (
         <>
