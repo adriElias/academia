@@ -1,6 +1,4 @@
 
 import { createContext } from 'react';
 
-const GlobalContext = createContext<any>(null);
-
-export default GlobalContext;
+export const GlobalContext = createContext<any>(null);

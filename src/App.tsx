@@ -1,10 +1,10 @@
-import Cursos from "./Cursos";
-import Alumnos from "./Alumnos";
-import Base from "./Base";
+import { Cursos } from "./Cursos";
+import { Alumnos } from "./Alumnos";
+import { Base } from "./Base";
 
-import UserContext from "./contextos/UserContext";
+import { UserContext } from "./contextos/UserContext";
 import { Routes, Route, Link } from 'react-router-dom';
-import NuevoAlumno from "./NuevoAlumno";
+import { NuevoAlumno } from "./NuevoAlumno";
 import { NuevoCurso } from "./NuevoCurso";
 import { ReactElement } from "react";
 import { UserData } from "./types";
@@ -31,7 +31,7 @@ function App(): ReactElement {
                 <Route path="/cursos" element={<Cursos />} />
                 <Route path="/alumnos" element={<Alumnos />} />
                 <Route path="/nuevo-alumno" element={<NuevoAlumno />} />
-                <Route path="/nuevo-curso" element={<NuevoCurso/>} />
+                <Route path="/nuevo-curso" element={<NuevoCurso />} />
             </Routes>
 
         </UserContext.Provider>

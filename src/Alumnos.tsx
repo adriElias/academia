@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import UserContext from "./contextos/UserContext";
+import { UserContext } from "./contextos/UserContext";
 import { Link } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ interface Alumno {
     curso: string;
 }
 
-function Alumnos(): ReactElement {
+export const Alumnos = (): ReactElement => {
 
     const userData = useContext(UserContext);
     const { nombre, token } = userData || { nombre: "", token: "" };
@@ -28,10 +28,10 @@ function Alumnos(): ReactElement {
 
     const cargarDatos = (): void => {
         alumnesController.getAllItems()
-        .then((datos: Alumno[]) => setAlumnos(datos))
-        .catch((error: Error) => console.log(error))
+            .then((datos: Alumno[]) => setAlumnos(datos))
+            .catch((error: Error) => console.log(error))
     }
-   
+
 
     // const cargarDatos = () => {
     //     const datos = alumnesController.getAllItems()
@@ -60,8 +60,8 @@ function Alumnos(): ReactElement {
     const eliminar = (idAlumno: number): void => {
         console.log("------llamando a la API--------")
         alumnesController.deleteItem(idAlumno)
-        .then(x => cargarDatos())
-       
+            .then(x => cargarDatos())
+
 
         // try {
         //     const datos = await alumnesController.deleteItem(idAlumno);
@@ -94,7 +94,7 @@ function Alumnos(): ReactElement {
         //     body: JSON.stringify({ Id: idAlumno })
         // };
 
-        
+
     }
 
     const tabla = alumnos.map((alumno: Alumno) =>
@@ -112,7 +112,7 @@ function Alumnos(): ReactElement {
         </tr>
     )
 
-    
+
 
     return (
         <>
@@ -128,7 +128,7 @@ function Alumnos(): ReactElement {
                         <th>ID Curso</th>
                         <th>Curso</th>
                         <th>Acciones</th>
-                        
+
                     </tr>
                 </thead>
                 <tbody>
@@ -144,5 +144,3 @@ function Alumnos(): ReactElement {
         </>
     )
 }
-
-export default Alumnos;

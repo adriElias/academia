@@ -1,4 +1,4 @@
-import NocodbController from "./NocodbController";
+import { NocodbController } from "./NocodbController";
 
 export class AlumnoController extends NocodbController {
 

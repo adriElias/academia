@@ -1,7 +1,7 @@
 
 import { ReactElement } from "react";
 
-function Base(): ReactElement {
+export const Base = (): ReactElement =>{
 
     return (
         <>
@@ -9,5 +9,3 @@ function Base(): ReactElement {
         </>
     )
 }
-
-export default Base;

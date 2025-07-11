@@ -1,4 +1,4 @@
-class AlumnosService {
+export class AlumnosService {
  
     
     async get(id: string | number): Promise<any> {
@@ -9,4 +9,3 @@ class AlumnosService {
     }
 }
 
-export default AlumnosService;

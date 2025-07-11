@@ -1,4 +1,4 @@
-import UserContext from "./contextos/UserContext";
+import { UserContext } from "./contextos/UserContext";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CursoController } from "./controllers/CursoController";
@@ -27,7 +27,7 @@ export const NuevoCurso = (): ReactElement => {
     const [duracion, setDuracion] = useState<string>("")
     const [inicio, setInicio] = useState<string>("")
 
-    function enviarCurso(e: React.FormEvent<HTMLFormElement>): void {
+    const enviarCurso = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         const nuevoCurso: NuevoCursoData = {
             title: title,
@@ -61,7 +61,7 @@ export const NuevoCurso = (): ReactElement => {
         //     })
         //     .catch(error => console.log(error))
     }
-    
+
 
     return (
         <>

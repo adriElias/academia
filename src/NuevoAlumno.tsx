@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import UserContext from "./contextos/UserContext";
+import { UserContext } from "./contextos/UserContext";
 import { useNavigate } from "react-router-dom";
-import NocodbController from "./controllers/NocodbController";
+import { NocodbController } from "./controllers/NocodbController";
 import { AlumnoController } from "./controllers/AlumnoController";
 import { CursoController } from "./controllers/CursoController";
 import Form from 'react-bootstrap/Form';
@@ -20,7 +20,7 @@ interface NuevoAlumnoData {
     curso: string;
 }
 
-function NuevoAlumno(): ReactElement {
+export const NuevoAlumno = (): ReactElement => {
 
     const userData = useContext(UserContext);
     const { token } = userData || { token: "" };
@@ -44,10 +44,10 @@ function NuevoAlumno(): ReactElement {
         cargarDatos();
     }, [])
 
-    function enviarAlumno(e: React.FormEvent<HTMLFormElement>): void {
+    const enviarAlumno = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         const cursoSeleccionado = cursos.find(c => c.Id === Number(idCurso) || c.Id === Number(idCurso));
-        const nombreCurso = cursoSeleccionado ? cursoSeleccionado.Title : "";  
+        const nombreCurso = cursoSeleccionado ? cursoSeleccionado.Title : "";
         const nuevoAlumno: NuevoAlumnoData = {
             nombre: nombre,
             email,
@@ -100,5 +100,3 @@ function NuevoAlumno(): ReactElement {
         </>
     )
 }
-
-export default NuevoAlumno;

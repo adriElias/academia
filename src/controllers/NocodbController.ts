@@ -19,7 +19,7 @@ interface RequestOptions {
     body?: string;
 }
 
-class NocodbController {
+export class NocodbController {
     private apiUrl: string;
     private token: string;
     
@@ -113,8 +113,6 @@ class NocodbController {
         return data;
     }
 }
-
-export default NocodbController;
 
 
 

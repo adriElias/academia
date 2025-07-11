@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import UserContext from "./contextos/UserContext";
+import { UserContext } from "./contextos/UserContext";
 import { Link } from "react-router-dom";
 import { CursoController } from "./controllers/CursoController";
 import { ReactElement } from "react";
@@ -9,7 +9,7 @@ interface Curso {
     Title: string;
 }
 
-function Cursos(): ReactElement {
+export const Cursos = (): ReactElement => {
 
     const userData = useContext(UserContext);
     const { nombre, token } = userData || { nombre: "", token: "" };
@@ -55,4 +55,3 @@ function Cursos(): ReactElement {
     )
 }
 
-export default Cursos;
