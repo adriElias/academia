@@ -28,22 +28,8 @@ export class NocodbController {
         this.token = token;
     }
 
-    getAllItems2(): Promise<any[]> {
-        const options: RequestOptions = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'xc-token': this.token
-            }
-        }
-
-        return fetch(`${this.apiUrl}`, options)
-        .then(x => x.json())
-        .then((data: NocodbResponse) => data.list)
-    
-    }
-
-    async getAllItems(): Promise<any[]> {
+    //<T> --> Pasar el tipo como parámetro para poder decirle a la función lo que tiene que retornar.
+    async getAllItems<T>(): Promise<T[]> {
         const response = await fetch(`${this.apiUrl}`, {
             method: 'GET',
             headers: {
@@ -52,10 +38,10 @@ export class NocodbController {
             }
         });
         const data: NocodbResponse = await response.json();
-        return data.list;
-    }
+        return data.list as T[];
+    } 
 
-    async getItemById(id: string | number): Promise<any> {
+    async getItemById<T>(id: string | number): Promise<T> {
         const response = await fetch(`${this.apiUrl}/${id}`, {
             method: 'GET',
             headers: {
@@ -65,10 +51,10 @@ export class NocodbController {
         });
 
         const data = await response.json();
-        return data;
+        return data as T;
     }
 
-    async createItem(nuevoItem: Record<string, any>): Promise<any> {
+    async createItem<T>(nuevoItem: T): Promise<T> {
         const response = await fetch(`${this.apiUrl}`, {
             method: 'POST',
             headers: {
@@ -79,10 +65,10 @@ export class NocodbController {
         });
 
         const data = await response.json();
-        return data;
+        return data as T;
     }
 
-    async updateItem(nuevosDatos: Record<string, any>, id: string | number): Promise<any> {
+    async updateItem<T>(nuevosDatos: any, id: string | number): Promise<T> {
         nuevosDatos.Id = id;
         const response = await fetch(`${this.apiUrl}`, {
             method: 'PATCH',
@@ -94,7 +80,7 @@ export class NocodbController {
         });
 
         const data = await response.json();
-        return data;
+        return data as T;
     }
 
     async deleteItem(id: string | number): Promise<any> {

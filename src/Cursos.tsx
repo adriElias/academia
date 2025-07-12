@@ -13,32 +13,17 @@ export const Cursos = (): ReactElement => {
 
     const userData = useContext(UserContext);
     const { nombre, token } = userData || { nombre: "", token: "" };
-
-    // const urlApi = "https://app.nocodb.com/api/v2/tables/m1qgokqms7cfewy/records"
     const cursoController = new CursoController(token);
+    //Decimos al useState de que tipo es el useState
     const [cursos, setCursos] = useState<Curso[]>([])
 
-    const cargarDatos = (): void => {
-        cursoController.getAllItems()
-            .then((datos: Curso[]) => setCursos(datos))
-            .catch((e: Error) => console.log(e))
+    const cargarCursos = async (): Promise<void> => {
+        const cursos = await cursoController.getAllItems<Curso>();
+        setCursos(cursos);
     }
 
     useEffect(() => {
-        cargarDatos();
-        // const opciones = {
-        //     method: "GET",
-        //     headers: {
-        //         accept: 'application/json',
-        //         'xc-token': token
-        //     }
-        // }
-
-        // fetch(urlApi, opciones)
-        //     .then(resp => resp.json())
-        //     .then(d => d.list)
-        //     .then(datos => setCursos(datos))
-        //     .catch(err => console.log(err))
+        cargarCursos();
     }, [])
 
 

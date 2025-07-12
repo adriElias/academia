@@ -35,13 +35,12 @@ export const NuevoAlumno = (): ReactElement => {
     const [idCurso, setIdCurso] = useState<string>("")
     const [cursos, setCursos] = useState<Curso[]>([])
 
-    const cargarDatos = (): void => {
-        cursoController.getAllItems()
-            .then((datos: Curso[]) => setCursos(datos))
-            .catch((e: Error) => console.log(e))
+    const cargarCursos = async(): Promise<void> => {
+        const cursos = await cursoController.getAllItems<Curso>();
+        setCursos(cursos);
     }
     useEffect(() => {
-        cargarDatos();
+        cargarCursos();
     }, [])
 
     const enviarAlumno = (e: React.FormEvent<HTMLFormElement>): void => {

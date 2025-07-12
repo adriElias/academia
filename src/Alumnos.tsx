@@ -11,90 +11,30 @@ interface Alumno {
     nombre: string;
     email: string;
     telefono: string;
-    idCurso: number;
-    curso: string;
+    cursos_name: string[];
 }
 
 export const Alumnos = (): ReactElement => {
 
     const userData = useContext(UserContext);
     const { nombre, token } = userData || { nombre: "", token: "" };
-
-    // const table = "met3zt25o9idyyf";
     const alumnesController = new AlumnoController(token);
     const [alumnos, setAlumnos] = useState<Alumno[]>([])
 
     const goTo = useNavigate()
 
-    const cargarDatos = (): void => {
-        alumnesController.getAllItems()
-            .then((datos: Alumno[]) => setAlumnos(datos))
-            .catch((error: Error) => console.log(error))
+    const cargarAlumnos = async (): Promise<void> => {
+        const alumnos = await alumnesController.getAllItems<Alumno>()
+        setAlumnos(alumnos);
     }
 
-
-    // const cargarDatos = () => {
-    //     const datos = alumnesController.getAllItems()
-    //     setAlumnos(datos);
-    // }
-
     useEffect(() => {
-        cargarDatos()
-        // const opciones = {
-        //     method: "GET",
-        //     headers: {
-        //         accept: 'application/json',
-        //         'xc-token': token
-        //     }
-        // }
-
-        // fetch(urlApi, opciones)
-        //     .then(resp => resp.json())
-        //     .then(d => d.list)
-        //     .then(datos => setAlumnos(datos))
-        //     .catch(err => console.log(err))
-
-
+        cargarAlumnos()
     }, [])
 
-    const eliminar = (idAlumno: number): void => {
-        console.log("------llamando a la API--------")
-        alumnesController.deleteItem(idAlumno)
-            .then(x => cargarDatos())
-
-
-        // try {
-        //     const datos = await alumnesController.deleteItem(idAlumno);
-        //     // const response = await fetch(urlApi, opciones)
-
-        //     if (!response.ok) throw new Error('Error al eliminar');
-
-        //     console.log('Alumno eliminado con ID:', idAlumno);
-        //     cargarDatos();
-
-        // }
-        // catch (error) {
-        //     console.log(error);
-        // };
-        // // Elimina el alumno localmente
-        // console.log("-----alumno:------", idAlumno)
-        // const nuevosAlumnos = alumnos.filter(e => e.Id !== idAlumno);
-        // setAlumnos(nuevosAlumnos);
-
-        // console.log("nuevos alumnos", nuevosAlumnos);
-
-        // // Llama a la API para eliminar el alumno en el backend
-        // const opciones = {
-        //     method: "DELETE",
-        //     headers: {
-        //         accept: '*/*',
-        //         'Content-Type': 'application/json',
-        //         'xc-token': token
-        //     },
-        //     body: JSON.stringify({ Id: idAlumno })
-        // };
-
-
+    const eliminar = async (idAlumno: number): Promise<void> => {
+        await alumnesController.deleteItem(idAlumno);
+        cargarAlumnos();
     }
 
     const tabla = alumnos.map((alumno: Alumno) =>
@@ -103,8 +43,7 @@ export const Alumnos = (): ReactElement => {
             <td>{alumno.nombre}</td>
             <td>{alumno.email}</td>
             <td>{alumno.telefono}</td>
-            <td>{alumno.idCurso}</td>
-            <td>{alumno.curso}</td>
+            <td>{alumno.cursos_name.join("  ")}</td>
             <td>
                 <button onClick={() => eliminar(alumno.Id)}>eliminar</button>
 
@@ -125,8 +64,7 @@ export const Alumnos = (): ReactElement => {
                         <th>Nombre</th>
                         <th>Email</th>
                         <th>Teléfono</th>
-                        <th>ID Curso</th>
-                        <th>Curso</th>
+                        <th>Cursos</th>
                         <th>Acciones</th>
 
                     </tr>
