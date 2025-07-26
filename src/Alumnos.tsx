@@ -46,12 +46,9 @@ export const Alumnos = (): ReactElement => {
             <td>{alumno.cursos_name.join("  ")}</td>
             <td>
                 <button onClick={() => eliminar(alumno.Id)}>eliminar</button>
-
             </td>
         </tr>
     )
-
-
 
     return (
         <>

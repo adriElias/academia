@@ -10,8 +10,7 @@ export interface Alumno {
     nombre: string;
     email: string;
     telefono: string;
-    idCurso: number;
-    curso: string;
+    cursos_name: string[];
 }
 
 export interface Curso {

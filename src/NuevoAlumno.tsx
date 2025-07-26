@@ -6,6 +6,7 @@ import { AlumnoController } from "./controllers/AlumnoController";
 import { CursoController } from "./controllers/CursoController";
 import Form from 'react-bootstrap/Form';
 import { ReactElement } from "react";
+import { Alumno } from "./types";
 
 interface Curso {
     Id: number;
@@ -16,15 +17,13 @@ interface NuevoAlumnoData {
     nombre: string;
     email: string;
     telefono: string;
-    idCurso: string;
-    curso: string;
 }
 
 export const NuevoAlumno = (): ReactElement => {
 
     const userData = useContext(UserContext);
     const { token } = userData || { token: "" };
-    const nuevoAlumnoController = new AlumnoController(token);
+    const alumnoController = new AlumnoController(token);
     const cursoController = new CursoController(token);
 
     const goTo = useNavigate()
@@ -35,7 +34,7 @@ export const NuevoAlumno = (): ReactElement => {
     const [idCurso, setIdCurso] = useState<string>("")
     const [cursos, setCursos] = useState<Curso[]>([])
 
-    const cargarCursos = async(): Promise<void> => {
+    const cargarCursos = async (): Promise<void> => {
         const cursos = await cursoController.getAllItems<Curso>();
         setCursos(cursos);
     }
@@ -43,23 +42,21 @@ export const NuevoAlumno = (): ReactElement => {
         cargarCursos();
     }, [])
 
-    const enviarAlumno = (e: React.FormEvent<HTMLFormElement>): void => {
+    const enviarAlumno = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
-        const cursoSeleccionado = cursos.find(c => c.Id === Number(idCurso) || c.Id === Number(idCurso));
-        const nombreCurso = cursoSeleccionado ? cursoSeleccionado.Title : "";
+
         const nuevoAlumno: NuevoAlumnoData = {
-            nombre: nombre,
+            nombre,
             email,
             telefono,
-            idCurso,
-            curso: nombreCurso
         }
-        nuevoAlumnoController.createItem(nuevoAlumno)
-            .then(datos => {
-                console.log(datos);
-                goTo('/alumnos');
-            })
-            .catch((e: Error) => console.log(e))
+        
+        const alumno = await alumnoController.createItem<Alumno>(nuevoAlumno)
+        await alumnoController.inscribirCurso(idCurso, alumno.Id);
+
+        console.log(alumno);
+        // alumnoController.inscribir(alumno.id, curso.id)
+        goTo('/alumnos');
 
     }
 
@@ -86,7 +83,7 @@ export const NuevoAlumno = (): ReactElement => {
                     <option value="">Selecciona un curso</option>
                     {cursos.map((curso: Curso) => (
                         <option key={curso.Id} value={curso.Id}>
-                            {curso.Title}{curso.Id}
+                            {curso.Id}.  {curso.Title}
                         </option>
                     ))}
                 </Form.Select>
