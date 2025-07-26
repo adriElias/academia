@@ -3,12 +3,28 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CursoController } from "./controllers/CursoController";
 import { ReactElement } from "react";
+import { Curso } from "./types";
+import { Form } from "react-bootstrap";
+
+enum Nivel {
+    BASICO = 'BASICO',
+    INTERMEDIO = 'INTERMEDIO',
+    AVANZADO = 'AVANZADO'
+}
+
+enum Turno {
+    MORNINGS = 'MAÑANAS',
+    AFTERNOON = "TARDES",
+    NIGHTS = "NOCHES"
+}
 
 interface NuevoCursoData {
     title: string;
     turno: string;
     duracion: string;
     inicio: string;
+    nivel: Nivel;
+    descripcion: string;
 }
 
 export const NuevoCurso = (): ReactElement => {
@@ -18,48 +34,33 @@ export const NuevoCurso = (): ReactElement => {
 
     const urlApi = "https://app.nocodb.com/api/v2/tables/m1qgokqms7cfewy/records"
 
-    const nuevoCursoController = new CursoController(token);
+    const cursoController = new CursoController(token);
 
     const goTo = useNavigate()
 
     const [title, setTitle] = useState<string>("")
-    const [turno, setTurno] = useState<string>("")
+    const [turno, setTurno] = useState<Turno>(Turno.MORNINGS)
     const [duracion, setDuracion] = useState<string>("")
     const [inicio, setInicio] = useState<string>("")
+    const [nivel, setNivel] = useState<Nivel>(Nivel.BASICO)
+    const [descripcion, setDescripcion] = useState<string>("")
 
-    const enviarCurso = (e: React.FormEvent<HTMLFormElement>): void => {
+    const enviarCurso = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         const nuevoCurso: NuevoCursoData = {
-            title: title,
-            turno: turno,
-            duracion: duracion,
-            inicio: inicio
-
+            title,
+            turno,
+            duracion,
+            inicio,
+            nivel,
+            descripcion
         }
-        nuevoCursoController.createItem(nuevoCurso)
-            .then(datos => {
-                console.log(datos);
-                goTo('/cursos');
-            })
-            .catch((e: Error) => console.log(e))
 
-        // const opciones = {
-        //     method: "POST",
-        //     headers: {
-        //         accept: 'application/json',
-        //         "Content-Type": 'application/json',
-        //         'xc-token': token
-        //     },
-        //     body: JSON.stringify(nuevoCurso)
-        // }
+        const curso = await cursoController.createItem<Curso>(nuevoCurso)
 
-        // fetch(urlApi, opciones)
-        //     .then(resp => resp.json())
-        //     .then(datos => {
-        //         console.log(datos);
-        //         goTo('/cursos');
-        //     })
-        //     .catch(error => console.log(error))
+        console.log(curso);
+        goTo('/cursos');
+
     }
 
 
@@ -72,10 +73,12 @@ export const NuevoCurso = (): ReactElement => {
                 <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <br />
 
-                <p>Turno</p>
-                <input type="text" value={turno} onChange={(e) => setTurno(e.target.value)} />
-                <br />
-
+                <Form.Select aria-label="Default select example" required>
+                    <option>Selecciona el turno</option>
+                    <option value={Turno.MORNINGS}>Mañanas</option>
+                    <option value={Turno.AFTERNOON}>Tardes</option>
+                    <option value={Turno.NIGHTS}>Noches</option>
+                </Form.Select>
                 <p>Duracion</p>
                 <input type="text" value={duracion} onChange={(e) => setDuracion(e.target.value)} />
                 <br />
@@ -84,11 +87,20 @@ export const NuevoCurso = (): ReactElement => {
                 <input type="text" value={inicio} onChange={(e) => setInicio(e.target.value)} />
                 <br />
 
+                <Form.Select aria-label="Default select example" required>
+                    <option>Selecciona el nivel</option>
+                    <option value={Nivel.BASICO}>Básico</option>
+                    <option value={Nivel.INTERMEDIO}>Intermedio</option>
+                    <option value={Nivel.AVANZADO}>Avanzado</option>
+                </Form.Select>
+                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                    <Form.Label>Descripción</Form.Label>
+                    <Form.Control as="textarea" rows={3}  value={descripcion} onChange={(e) => setDescripcion(e.target.value)}/>
+                </Form.Group>
+
                 <button type="submit">ENVIAR CURSO</button>
 
             </form>
-
-
 
         </>
     )
