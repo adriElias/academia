@@ -21,7 +21,7 @@ interface RequestOptions {
 
 export class NocodbController {
     private apiUrl: string;
-    private token: string;
+    protected token: string;
     
     constructor(taula: string, token: string) {
         this.apiUrl = `https://app.nocodb.com/api/v2/tables/${taula}/records`;
@@ -54,7 +54,8 @@ export class NocodbController {
         return data as T;
     }
 
-    async createItem<T>(nuevoItem: T): Promise<T> {
+    //Patial--> El Type que lo paso son con sus campos opcionales
+    async createItem<T>(nuevoItem: Partial<T>): Promise<T> {
         const response = await fetch(`${this.apiUrl}`, {
             method: 'POST',
             headers: {
