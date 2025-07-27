@@ -8,6 +8,7 @@ import { NuevoAlumno } from "./NuevoAlumno";
 import { NuevoCurso } from "./NuevoCurso";
 import { ReactElement } from "react";
 import { UserData } from "./types";
+import { Curso } from "./Curso";
 
 function App(): ReactElement {
 
@@ -29,9 +30,11 @@ function App(): ReactElement {
             <Routes>
                 <Route path="/" element={<Base />} />
                 <Route path="/cursos" element={<Cursos />} />
+                <Route path="/cursos/:idCurso" element={<Curso/>} />
                 <Route path="/alumnos" element={<Alumnos />} />
                 <Route path="/nuevo-alumno" element={<NuevoAlumno />} />
                 <Route path="/nuevo-curso" element={<NuevoCurso />} />
+
             </Routes>
 
         </UserContext.Provider>
